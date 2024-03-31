@@ -1,9 +1,11 @@
-package repository;
+package com.app.app.repository;
 
-import entities.User;
+import com.app.app.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User,Integer> {
+    Optional<User> findByEmail(String email);
 }
