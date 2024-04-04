@@ -1,8 +1,12 @@
 package com.app.app.controller;
 
+import com.app.app.Exception.RoleNotFoundException;
 import com.app.app.config.JwtService;
 import com.app.app.dto.AuthentificationDTO;
+import com.app.app.dto.DoctorDto;
+import com.app.app.dto.PatientDto;
 import com.app.app.entities.Doctor;
+import com.app.app.entities.Patient;
 import com.app.app.entities.Specialities;
 import com.app.app.entities.User;
 import com.app.app.services.DoctorServiceImpl;
@@ -10,12 +14,10 @@ import com.app.app.services.DoctorServiceImpl;
 import com.app.app.services.UserServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import com.app.app.services.UserService;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,15 @@ public class UserController {
     private UserServiceImp userService;
     @Autowired
     JwtService jwtService;
+
+    @PostMapping("/signup-patient")
+    public String inscription(@RequestBody PatientDto patientDto) throws RoleNotFoundException {
+        return this.userService.signUpPatient(patientDto);
+    }
+    @PostMapping("/signup-doctor")
+    public String inscription(@RequestBody DoctorDto doctorDto) throws RoleNotFoundException {
+        return this.userService.signUpDoctor(doctorDto);
+    }
     @GetMapping("/users")
     @ResponseBody
     public List<User> getAllUsers(){
@@ -42,27 +53,14 @@ public class UserController {
     public User getUserById(@PathVariable("id") int id){
         return userService.getUserById(id);
     }
-    @PostMapping("/ajouterUser")
-    @ResponseBody
-    public User AjouterUser(@RequestBody User u){
-        return userService.ajouter(u);
-    }
+
     @DeleteMapping("/deleteUser/{id}")
     @ResponseBody
     public void deleteUserById(@PathVariable("id") int id){
         userService.deleteUser(id);
     }
 
-    @GetMapping("/getBySpeciality/{speciality}")
-    public List<Doctor> getBySpeciality(@PathVariable Specialities speciality) {
-        return doctorService.getBySpecialty(speciality);
-    }
-    @PostMapping("/inscription")
-    public void inscription(@RequestBody User user){
-        log.info("Inscription");
-        this.userService.inscription(user);
 
-    }
     @PostMapping(path = "/activation")
     public void activation(@RequestBody Map<String, String> activation) {
         this.userService.activation(activation);

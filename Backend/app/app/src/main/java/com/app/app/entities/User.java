@@ -14,6 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +22,16 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
-    private Date dob; // Date of Birth
+    private Date dob;// Date of Birth
+
+
     private boolean actif=false;
     @OneToOne(cascade = CascadeType.ALL)
     private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+this.role.getLibelle()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+this.role.getName()));
     }
 
     @Override

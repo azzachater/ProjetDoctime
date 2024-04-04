@@ -11,9 +11,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -30,10 +28,14 @@ public class JwtService {
     private Map<String, String> generateJwt(User user) {
         final long currentTime=System.currentTimeMillis();
         final long expirationTime=currentTime+30*60*1000;
-        final Map<String, Object> claims=Map.of("username",user.getUsername(),
+        final Map<String, Object> claims = new HashMap<>();
+        claims.put("username", user.getUsername());
+        claims.put(Claims.EXPIRATION, new Date(expirationTime));
+        claims.put(Claims.SUBJECT, user.getEmail());
+        /*final Map<String, Object> claims=Map.of("username",user.getUsername(),
                 Claims.EXPIRATION, new Date(expirationTime),
                 Claims.SUBJECT, user.getEmail()
-        );
+        );*/
 
         final String bearer =Jwts.builder()
                 .setIssuedAt(new Date(currentTime))
@@ -42,7 +44,9 @@ public class JwtService {
                 .setClaims(claims)
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
-        return Map.of("bearer",bearer) ;
+        //return Map.of("bearer",bearer) ;
+        return Collections.singletonMap("bearer", bearer); // Utilisation de Collections.singletonMap pour créer un Map
+
     }
 
     private Key getKey() {

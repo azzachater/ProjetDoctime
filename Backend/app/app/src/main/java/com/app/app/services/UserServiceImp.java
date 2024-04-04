@@ -1,15 +1,14 @@
 package com.app.app.services;
 
-import com.app.app.entities.Role;
-import com.app.app.entities.User;
-import com.app.app.entities.Validation;
+import com.app.app.Exception.RoleNotFoundException;
+import com.app.app.dto.DoctorDto;
+import com.app.app.dto.PatientDto;
+import com.app.app.entities.*;
+import com.app.app.repository.DoctorRepository;
+import com.app.app.repository.PatientRepository;
+import com.app.app.repository.RoleRepository;
 import com.app.app.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,68 +19,88 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import com.app.app.TypeDeRole;
 
 @Service
 public class UserServiceImp implements UserService , UserDetailsService {
 
     @Autowired
-    UserRepository repUser;
+    UserRepository userRepository;
+    @Autowired
+    DoctorRepository doctorRepository;
+    @Autowired
+    PatientRepository repPatient;
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     ValidationService validationService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public void inscription(User user){
-        if(!user.getEmail().contains("@")){
-            throw new RuntimeException("Email invalide");
+    public String signUpPatient(PatientDto patientDto) throws RoleNotFoundException {
+        if(!patientDto.getEmail().contains("@")){
+            return "Invalid Email";
         }
-        if(!user.getEmail().contains(".")){
-            throw new RuntimeException("Email invalide");
+        if(!patientDto.getEmail().contains(".")){
+            return "Invalid Email";
         }
-        Optional<User> utilisateurOptional = this.repUser.findByEmail(user.getEmail());
+        Optional<User> utilisateurOptional = this.userRepository.findByEmail(patientDto.getEmail());
         if(utilisateurOptional.isPresent()) {
-            throw  new RuntimeException("Votre mail est déjà utilisé");
+            return "Email Already Used";
         }
-        String passwordCrypte=this.passwordEncoder.encode(user.getPassword());
+        Role userRole = roleRepository.findByName(ERole.PATIENT)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found."));
+        Patient patient = new Patient();
+        patient.setEmail(patientDto.getEmail());
+        patient.setUsername(patientDto.getUsername());
+        patient.setDob(patientDto.getDob());
+        patient.setPassword(this.passwordEncoder.encode(patientDto.getPassword()));
+        patient.setRole(userRole);
+        userRepository.save(patient);
+        validationService.enregistrer(patient);
 
-        user.setPassword(passwordCrypte);
-
-        Role roleUtilisateur = new Role();
-        roleUtilisateur.setLibelle(TypeDeRole.PATIENT);
-        user.setRole(roleUtilisateur);
-
-        User user1= this.repUser.save(user);
-        this.validationService.enregistrer(user1);
-
+        return "Patient Added successfully";
     }
-    @Override
-    public User ajouter(User u) {
-        repUser.save(u);
-        return u;
+    public String signUpDoctor(DoctorDto doctorDto) throws RoleNotFoundException {
+        if(!doctorDto.getEmail().contains("@")){
+            return "Invalid Email";
+        }
+        if(!doctorDto.getEmail().contains(".")){
+            return "Invalid Email";
+        }
+        Optional<User> utilisateurOptional = this.userRepository.findByEmail(doctorDto.getEmail());
+        if(utilisateurOptional.isPresent()) {
+            return "Email Already Used";
+        }
+        Role userRole = roleRepository.findByName(ERole.DOCTOR)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found."));
+        Doctor doctor = new Doctor();
+        doctor.setEmail(doctorDto.getEmail());
+        doctor.setUsername(doctorDto.getUsername());
+        doctor.setDob(doctorDto.getDob());
+        doctor.setPassword(this.passwordEncoder.encode(doctorDto.getPassword()));
+        doctor.setRole(userRole);
+        userRepository.save(doctor);
+        validationService.enregistrer(doctor);
+
+        return "Doctor Added successfully";
     }
 
-    @Override
-    public void deleteUser(User u) {
-        repUser.delete(u);
-
-    }
 
     @Override
     public void deleteUser(int id) {
-        repUser.deleteById(id);
+        userRepository.deleteById(id);
 
     }
 
     @Override
     public List<User> getAllUsers() {
-        return (List<User>) repUser.findAll();
+        return (List<User>) userRepository.findAll();
     }
 
     @Override
     public User getUserById(int id) {
-        return (User) repUser.findAllById(Collections.singleton(id));
+        return (User) userRepository.findAllById(Collections.singleton(id));
     }
 
 
@@ -90,14 +109,14 @@ public class UserServiceImp implements UserService , UserDetailsService {
         if(Instant.now().isAfter(validation.getExpiration())){
             throw  new RuntimeException("Votre code a expiré");
         }
-        User userActif = this.repUser.findById(validation.getUser().getUserid()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));
+        User userActif = this.userRepository.findById(validation.getUser().getUserid()).orElseThrow(() -> new RuntimeException("Utilisateur inconnu"));
         userActif.setActif(true);
-        this.repUser.save(userActif);
+        this.userRepository.save(userActif);
     }
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.repUser
+        return this.userRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
     }

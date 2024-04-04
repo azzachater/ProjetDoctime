@@ -43,8 +43,11 @@ public class WebSecurityConfig {
                                 authorize ->
                                         authorize
                                                 .requestMatchers(POST,"/inscription").permitAll()
+                                                .requestMatchers(POST,"/signup-doctor").permitAll()
+                                                .requestMatchers(POST,"/signup-patient").permitAll()
                                                 .requestMatchers(POST,"/activation").permitAll()
                                                 .requestMatchers(POST,"/connexion").permitAll()
+                                                .requestMatchers(POST,"/rendezvous/add").permitAll()
                                                 .anyRequest().authenticated()
                         )
                         .sessionManagement(httpSecuritySessionManagementConfigurer ->

@@ -30,7 +30,6 @@ public class ValidationService {
 
         this.validationRepository.save(validation);
         this.notificationService.envoyer(validation);
-
     }
 
     public Validation lireEnFonctionDuCode(String code) {

@@ -16,7 +16,9 @@ public class Comment {
     private String message;
     private String statut;
     @ManyToOne
-    private User user;
+    private Patient patient;
+    @ManyToOne
+    private Doctor doctor;
 
 }
 
