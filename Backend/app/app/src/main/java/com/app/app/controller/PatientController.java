@@ -7,13 +7,10 @@ import com.app.app.services.CommentService;
 import com.app.app.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class PatientController {
     @Autowired
@@ -34,7 +31,7 @@ public class PatientController {
     public List<Doctor> getAllDoctors(){
         return doctorService.getAllDoctors();
     }
-    @GetMapping("/getBySpeciality/{speciality}")
+    @GetMapping("/speciality/{speciality}")
     public List<Doctor> getBySpeciality(@PathVariable Specialities speciality) {
         return doctorService.getBySpecialty(speciality);
     }

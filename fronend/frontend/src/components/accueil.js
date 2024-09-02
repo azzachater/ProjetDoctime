@@ -3,7 +3,7 @@ import Navbar from './navbar';
 import Home from './home';
 import About from './about';
 import Department from './departement';
-import Doctors from './Doctors';
+import BestDoctors from './BestDoctors';
 import Blog from './blog';
 import Contact from './contact';
 function Accueil(){
@@ -13,7 +13,7 @@ function Accueil(){
       <Home></Home>
       <About></About>
       <Department></Department>
-      <Doctors></Doctors>
+      <BestDoctors></BestDoctors>
       <Blog></Blog>
       <Contact></Contact>
     </>

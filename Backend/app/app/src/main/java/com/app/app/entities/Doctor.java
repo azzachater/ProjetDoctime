@@ -11,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Getter
+@Setter
 @PrimaryKeyJoinColumn(name = "doctor_id")
 public class Doctor extends User {
     private Specialities speciality;

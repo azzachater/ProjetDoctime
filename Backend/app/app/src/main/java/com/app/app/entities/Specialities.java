@@ -2,5 +2,6 @@ package com.app.app.entities;
 
 public enum Specialities {
 
-    Dentiste , Dermatologue , Généraliste,Gynécologue
+    Surgical,Dental, Opthalmology,Traumatology,Nuclear,Cardiology,
+    Dermatology,Neurology,Pediatrics,Gynecologic
 }

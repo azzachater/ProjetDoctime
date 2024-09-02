@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 @RestController
 
@@ -68,10 +68,10 @@ public class UserController {
     @PostMapping(path = "/connexion")
     public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
         final Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authentificationDTO.username(), authentificationDTO.password())
+                new UsernamePasswordAuthenticationToken(authentificationDTO.email()  , authentificationDTO.password())
         );
         if(authenticate.isAuthenticated()){
-            return this.jwtService.generate(authentificationDTO.username());
+            return this.jwtService.generate(authentificationDTO.email());
         }
 
 

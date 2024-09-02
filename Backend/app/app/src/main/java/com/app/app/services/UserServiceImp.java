@@ -80,9 +80,15 @@ public class UserServiceImp implements UserService , UserDetailsService {
         doctor.setDob(doctorDto.getDob());
         doctor.setPassword(this.passwordEncoder.encode(doctorDto.getPassword()));
         doctor.setRole(userRole);
+        Specialities speciality = doctorDto.getSpeciality();
+        System.out.println(speciality.name());
+        doctor.setSpeciality(speciality);
+        System.out.println(doctor.getSpeciality());
+        doctor.setAddress(doctorDto.getAddress());
+        doctor.setExperience(doctorDto.getExperience());
+        System.out.println(doctor.toString());
         userRepository.save(doctor);
         validationService.enregistrer(doctor);
-
         return "Doctor Added successfully";
     }
 

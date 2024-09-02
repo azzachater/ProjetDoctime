@@ -1,110 +1,63 @@
 import React from "react";
-function Department(){
-    return(
-        <section class="ftco-section ftco-no-pt ftco-no-pb" id="department-section">
-    	<div class="container-fluid px-0">
-    		<div class="row no-gutters">
-    			<div class="col-md-4 d-flex">
-    				<div class="img img-dept align-self-stretch" style={{backgroundImage: "url('assets/images/dept-1.jpg')"}}></div>
-    			</div>
+import { NavLink } from 'react-router-dom';
 
-    			<div class="col-md-8">
-    				<div class="row no-gutters">
-    					<div class="col-md-4">
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Neurology</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Surgical</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Dental</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    					</div>
+const departments = [
+  { speciality: "Neurology", description: "Far far away, behind the word mountains" },
+  { speciality: "Surgical", description: "Far far away, behind the word mountains" },
+  { speciality: "Dental", description: "Far far away, behind the word mountains" },
+  { speciality: "Opthalmology", description: "Far far away, behind the word mountains" },
+  { speciality: "Cardiology", description: "Far far away, behind the word mountains" },
+  { speciality: "Traumatology", description: "Far far away, behind the word mountains" },
+  { speciality: "Nuclear Magnetic", description: "Far far away, behind the word mountains" },
+  { speciality: "X-ray", description: "Far far away, behind the word mountains" },
+];
 
-    					<div class="col-md-4">
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Opthalmology</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Cardiology</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Traumatology</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    					</div>
+const DepartmentItem = ({ speciality, description }) => (
+  <div className="department-wrap p-4 ftco-animate">
+    <div className="text p-2 text-center">
+      <div className="icon">
+        <span className="flaticon-stethoscope"></span>
+      </div>
+      <h3><NavLink to={`/speciality/${speciality}`}>{speciality}</NavLink></h3>
+      <p>{description}</p>
+    </div>
+  </div>
+);
 
-    					<div class="col-md-4">
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Nuclear Magnetic</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">X-ray</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    						<div class="department-wrap p-4 ftco-animate">
-    							<div class="text p-2 text-center">
-    								<div class="icon">
-    									<span class="flaticon-stethoscope"></span>
-    								</div>
-    								<h3><a href="#">Cardiology</a></h3>
-    								<p>Far far away, behind the word mountains</p>
-    							</div>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
+function Department() {
+  return (
+    <section className="ftco-section ftco-no-pt ftco-no-pb" id="department-section">
+      <div className="container-fluid px-0">
+        <div className="row no-gutters">
+          <div className="col-md-4 d-flex">
+            <div className="img img-dept align-self-stretch" style={{backgroundImage: "url('assets/images/dept-1.jpg')"}}></div>
+          </div>
+
+          <div className="col-md-8">
+            <div className="row no-gutters">
+              <div className="col-md-4">
+                {departments.slice(0, 3).map((department, index) => (
+                  <DepartmentItem key={index} {...department} />
+                ))}
+              </div>
+
+              <div className="col-md-4">
+                {departments.slice(3, 6).map((department, index) => (
+                  <DepartmentItem key={index} {...department} />
+                ))}
+              </div>
+
+              <div className="col-md-4">
+                {departments.slice(6).map((department, index) => (
+                  <DepartmentItem key={index} {...department} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
-
-    );
+  );
 }
+
 export default Department;
